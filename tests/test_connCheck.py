@@ -13,5 +13,7 @@ class TestFileParsing(unittest.TestCase):
         connCheck.parseJsonObjFromString("test_String")
     self.assertEqual(cm.exception.code, connCheck.ExitCodes.JSON_DECODING_ERROR)
 
+    
+    
 if __name__ == '__main__':
     unittest.main()

@@ -9,15 +9,40 @@ class ExitCodes:
 def main():
     args = readCommandLineOptions()
     connectionsToCheck = getConnectionsObjFromFilename(args.fileName)
+    iterateOverConnections(connectionsToCheck)
 
+def iterateOverConnections(connectionsToCheck):
+    for connectionSet in connectionsToCheck['connectionSets']:
+        printConnectionSetLocalSummary(connectionSet)
+        localIP = connectionSet['localIP']
+        localPort = connectionSet['localPort']
+        for remoteIPandPort in connectionSet['remoteIPandPorts']:
+            remoteIP=remoteIPandPort['IP']
+            remotePort=remoteIPandPort['Port']
+            print "Local IP" + localIP
+            print " LocalPort " + str(localPort)
+            print "Remote IP" + remoteIP
+            print "Remote Port " + str(remotePort)
+
+            
+def printConnectionSetLocalSummary(connectionSet):
+    print "Connection set summary"
+    print "======================"
+    print "\tLocal IP: " + connectionSet['localIP']
+    print "\tLocal Port: " + str(connectionSet['localPort'])
+    print "======================"
+    print connectionSet
+    
 def getConnectionsObjFromFilename(filename):
     connectionsString = readStringFromFile(filename)
+    print connectionsString
     connectionsJsonParsed = parseJsonObjFromString(connectionsString)
     return connectionsJsonParsed
 
-def parseJsonObjFromString(connectionString):
+def parseJsonObjFromString(connectionsString):
     try:
-        connectionsJsonParsed = json.loads(connectionString)
+        connectionsJsonParsed = json.loads(connectionsString)
+        return connectionsJsonParsed
     except ValueError:
         print "Decoding JSON data has failed"
         exit(ExitCodes.JSON_DECODING_ERROR)
