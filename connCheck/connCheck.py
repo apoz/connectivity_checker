@@ -16,6 +16,7 @@ def iterateOverConnections(connectionsToCheck):
         printConnectionSetLocalSummary(connectionSet)
         localIP = connectionSet['localIP']
         localPort = connectionSet['localPort']
+        protocol = connectionSet['protocol']
         for remoteIPandPort in connectionSet['remoteIPandPorts']:
             remoteIP=remoteIPandPort['IP']
             remotePort=remoteIPandPort['Port']
@@ -24,7 +25,6 @@ def iterateOverConnections(connectionsToCheck):
             print "Remote IP" + remoteIP
             print "Remote Port " + str(remotePort)
 
-            
 def printConnectionSetLocalSummary(connectionSet):
     print "Connection set summary"
     print "======================"
