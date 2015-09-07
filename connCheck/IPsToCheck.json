@@ -1,20 +1,19 @@
 {
 "connectionSets": [
    {
-        "localIP": "1.1.1.1",
-        "localPort": 111,
-        "protocol": "TCP",
-        "remoteIPandPorts": [
-            {   
-                "IP": "2.2.2.2",
-                "Port": 2222
-            },
-            {   
-                "IP": "3.3.3.3",
-                "Port": 3333
-            }
-        ]
-        
+      "localIP": "1.1.1.1",
+      "localPort": 111,
+      "protocol": "TCP",
+      "remoteIPandPorts": [
+      {   
+         "IP": "2.2.2.2",
+         "Port": 2222
+      },
+      {   
+         "IP": "3.3.3.3",
+         "Port": 3333
+      }
+      ]
    }
-]
+  ]
 }
