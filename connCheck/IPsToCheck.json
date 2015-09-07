@@ -1,0 +1,20 @@
+{
+"connectionSets": [
+   {
+        "localIP": "x.x.x.x",
+        "localPort": xxx,
+        "protocol": "TCP",
+        "remoteIPandPorts": [
+            {   
+                "IP": "Y.Y.Y.Y",
+                "port": yyyy
+            },
+            {   
+                "IP": "Y.Y.Y.Y",
+                "port": yyyy
+            }
+        ]
+        
+   }
+]
+}
