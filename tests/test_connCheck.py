@@ -15,7 +15,15 @@ class TestFileParsing(unittest.TestCase):
         connCheck.parseJsonObjFromString("test_String")
     self.assertEqual(cm.exception.code, connCheck.ExitCodes.JSON_DECODING_ERROR)
 
-    
-    
+  def test_getConnectionsObjFromFilename(self):
+   	connectionsObj=connCheck.getConnectionsObjFromFilename('tests/test_IPsToCheck.json')
+   	self.assertEqual(connectionsObj['connectionSets'][0]['localIP'],'1.1.1.1')
+   	self.assertEqual(connectionsObj['connectionSets'][0]['localPort'],111)
+   	self.assertEqual(connectionsObj['connectionSets'][0]['protocol'],'TCP')
+   	self.assertEqual(connectionsObj['connectionSets'][0]['remoteIPandPorts'][0]['IP'],'2.2.2.2')
+   	self.assertEqual(connectionsObj['connectionSets'][0]['remoteIPandPorts'][0]['Port'],2222)
+	self.assertEqual(connectionsObj['connectionSets'][0]['remoteIPandPorts'][1]['IP'],'3.3.3.3')
+	self.assertEqual(connectionsObj['connectionSets'][0]['remoteIPandPorts'][1]['Port'],3333)
+
 if __name__ == '__main__':
     unittest.main()
