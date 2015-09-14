@@ -35,3 +35,10 @@ Tests classes are implemented under the tests directory of the project
 ]
 }
 ```
+
+# Linkdump
+
+Low level networking can be done with the sockets library
+
+https://docs.python.org/2.7/library/socket.html
+
