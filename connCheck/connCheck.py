@@ -3,6 +3,7 @@
 
 import argparse
 import simplejson as json
+import socket
 
 class ExitCodes:
     UNABLE_TO_READ_FILE = 1
@@ -15,17 +16,42 @@ def main():
 
 def iterateOverConnections(connectionsToCheck):
     for connectionSet in connectionsToCheck['connectionSets']:
-        printConnectionSetLocalSummary(connectionSet)
+        #printConnectionSetLocalSummary(connectionSet)
         localIP = connectionSet['localIP']
         localPort = connectionSet['localPort']
         protocol = connectionSet['protocol']
         for remoteIPandPort in connectionSet['remoteIPandPorts']:
-            remoteIP=remoteIPandPort['IP']
-            remotePort=remoteIPandPort['Port']
-            print "Local IP" + localIP
-            print " LocalPort " + str(localPort)
-            print "Remote IP" + remoteIP
-            print "Remote Port " + str(remotePort)
+            testConnectivity(localIP,localPort,protocol,remoteIPandPort['IP'],remoteIPandPort['Port'])
+
+def testConnectivity(localIP,localPort,protocol,remoteIP,remotePort):
+    if protocol == "TCP":
+        testTCPConnectivity(localIP, localPort, protocol, remoteIP, remotePort)    
+    return
+
+def testTCPConnectivity(localIP, localPort, protocol, remoteIP, remotePort):
+    #local IP/PORT not binded for now
+    socket.setdefaulttimeout(2)
+    sock = socket.socket()
+    try:
+        result = sock.connect_ex((remoteIP, remotePort))
+        sock.close()
+        printTCPConnectionSummaryAndResult(localIP, localPort, remoteIP, remotePort, result)
+    except:
+        printTCPConnectionSummaryAndResult(localIP, localPort, remoteIP, remotePort, result)
+    return
+
+def printTCPConnectionSummaryAndResult(localIP, localPort, remoteIP, remotePort, result):
+    printTCPConnectionSummary(localIP, localPort, remoteIP, remotePort)
+    printTCPConnectionResult(result)
+
+def printTCPConnectionResult(result):
+    print '\nANDRES->' + str(result)
+
+def printTCPConnectionSummary(localIP, localPort, remoteIP, remotePort):
+    print "\tLocal IP: " + localIP
+    print "\tLocal Port: " + str(localPort)    
+    print "\tRemote IP: " + remoteIP
+    print "\tLocal Port: " + str(remotePort)
 
 def printConnectionSetLocalSummary(connectionSet):
     print "Connection set summary"
@@ -37,7 +63,7 @@ def printConnectionSetLocalSummary(connectionSet):
     
 def getConnectionsObjFromFilename(filename):
     connectionsString = readStringFromFile(filename)
-    print connectionsString
+    #print connectionsString
     connectionsJsonParsed = parseJsonObjFromString(connectionsString)
     return connectionsJsonParsed
 
