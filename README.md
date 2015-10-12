@@ -9,7 +9,7 @@ Unit tests can be run with the following command from the project directory.
 ```
  python -m unittest discover
  ```
-Tests classes are implemented under the tests directory of the project
+Tests classes are implemented under the tests directory of the project.
 
 # Input file format
 
