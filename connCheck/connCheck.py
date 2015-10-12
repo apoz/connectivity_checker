@@ -8,6 +8,7 @@ import socket
 class ExitCodes:
     UNABLE_TO_READ_FILE = 1
     JSON_DECODING_ERROR = 2
+    UNABLE_TO_BIND_LOCAL_IP_PORT = 3
 
 def main():
     args = readCommandLineOptions()
@@ -32,6 +33,14 @@ def testTCPConnectivity(localIP, localPort, protocol, remoteIP, remotePort):
     #local IP/PORT not binded for now
     socket.setdefaulttimeout(2)
     sock = socket.socket()
+    #local port and IP binding
+    try:
+        if localIP or localPort:
+            sock.bind((localIP,localPort))
+    except socket.error , msg:
+        print  'Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
+        exit(ExitCodes.UNABLE_TO_BIND_LOCAL_IP_PORT)
+
     try:
         result = sock.connect_ex((remoteIP, remotePort))
         sock.close()
@@ -45,7 +54,7 @@ def printTCPConnectionSummaryAndResult(localIP, localPort, remoteIP, remotePort,
     printTCPConnectionResult(result)
 
 def printTCPConnectionResult(result):
-    print '\nANDRES->' + str(result)
+    print '\n' + str(result)
 
 def printTCPConnectionSummary(localIP, localPort, remoteIP, remotePort):
     print "\tLocal IP: " + localIP
