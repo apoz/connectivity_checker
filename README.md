@@ -36,6 +36,12 @@ Tests classes are implemented under the tests directory of the project.
 }
 ```
 
+# TODO/Backlog
+* Make the args get to the printing function to decide the print format of the results
+* Make unit tests for -o option
+* Improve unit tests
+* Make ping option available
+
 # Linkdump
 
 Low level networking can be done with the sockets library

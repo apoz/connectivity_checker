@@ -4,6 +4,7 @@
 import argparse
 import simplejson as json
 import socket
+import os
 
 class ExitCodes:
     UNABLE_TO_READ_FILE = 1
@@ -18,18 +19,28 @@ def main():
 def iterateOverConnections(connectionsToCheck):
     for connectionSet in connectionsToCheck['connectionSets']:
         #printConnectionSetLocalSummary(connectionSet)
-        localIP = connectionSet['localIP']
-        localPort = connectionSet['localPort']
-        protocol = connectionSet['protocol']
+        try:
+            localIP = connectionSet['localIP']
+        except:
+            localIP=''
+        try:
+            locallPort = connectionSet['localPort']
+        except:
+            localPort = ''
+        try:
+            protocol = connectionSet['protocol']
+        except:
+            protocol = 'TCP'  #default protocol
+
         for remoteIPandPort in connectionSet['remoteIPandPorts']:
             testConnectivity(localIP,localPort,protocol,remoteIPandPort['IP'],remoteIPandPort['Port'])
 
 def testConnectivity(localIP,localPort,protocol,remoteIP,remotePort):
     if protocol == "TCP":
-        testTCPConnectivity(localIP, localPort, protocol, remoteIP, remotePort)    
+        testTCPConnectivity(localIP, localPort, remoteIP, remotePort)    
     return
 
-def testTCPConnectivity(localIP, localPort, protocol, remoteIP, remotePort):
+def testTCPConnectivity(localIP, localPort, remoteIP, remotePort):
     #local IP/PORT not binded for now
     socket.setdefaulttimeout(2)
     sock = socket.socket()
@@ -44,9 +55,9 @@ def testTCPConnectivity(localIP, localPort, protocol, remoteIP, remotePort):
     try:
         result = sock.connect_ex((remoteIP, remotePort))
         sock.close()
-        printTCPConnectionSummaryAndResult(localIP, localPort, remoteIP, remotePort, result)
     except:
-        printTCPConnectionSummaryAndResult(localIP, localPort, remoteIP, remotePort, result)
+        sock.close()
+    printTCPConnectionSummaryAndResult(localIP, localPort, remoteIP, remotePort, result)
     return
 
 def printTCPConnectionSummaryAndResult(localIP, localPort, remoteIP, remotePort, result):
@@ -54,13 +65,15 @@ def printTCPConnectionSummaryAndResult(localIP, localPort, remoteIP, remotePort,
     printTCPConnectionResult(result)
 
 def printTCPConnectionResult(result):
-    print '\n' + str(result)
+    print '\n' + os.strerror(result)
 
 def printTCPConnectionSummary(localIP, localPort, remoteIP, remotePort):
-    print "\tLocal IP: " + localIP
-    print "\tLocal Port: " + str(localPort)    
+    if localIP:
+        print "\tLocal IP: " + localIP
+    if localPort:
+        print "\tLocal Port: " + str(localPort)    
     print "\tRemote IP: " + remoteIP
-    print "\tLocal Port: " + str(remotePort)
+    print "\tRemote Port: " + str(remotePort)
 
 def printConnectionSetLocalSummary(connectionSet):
     print "Connection set summary"
@@ -102,10 +115,11 @@ def readCommandLineOptions():
 
 def addCommandLineArguments(parser):
     parser.add_argument("fileName", help="Input the filename where the IPs to check are listed (json format)")
+    parser.add_argument('-o','--outputFormat', help='Format required for the output (CSV or TEXT for now)', required=True)
     return parser
 
 def InitializeCommandLineArgumentsParser():
-    parser = argparse.ArgumentParser(description='Demo')
+    parser = argparse.ArgumentParser(description='Ridiculously overengineered connectivity checker')
     return parser
 
 if __name__ == '__main__':
